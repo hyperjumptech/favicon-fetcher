@@ -77,7 +77,10 @@ export async function getFavicon(
         return Buffer.from(ab)
       })
 
-      icon = result
+      if (result) {
+        icon = result
+        break
+      }
 
       // Else, use another strategy
       continue

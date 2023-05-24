@@ -1,6 +1,10 @@
 import { getFavicon } from '../src'
 import { type EStrategies } from '../src/get-favicon'
 
+beforeEach(() => {
+  jest.setTimeout(10000)
+})
+
 describe('Get favicon function', () => {
   it('should get the favicon correctly without options', async () => {
     const result = await getFavicon('https://www.google.com')

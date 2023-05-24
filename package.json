@@ -1,6 +1,6 @@
 {
   "name": "@hyperjumptech/favicon-fetcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility to fetch a website's favicon",
   "main": "dist/index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write src/*",
     "format:check": "prettier --check src/*",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
     "prepare": "husky install"
   },
   "repository": {

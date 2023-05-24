@@ -11,6 +11,7 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
+  ignorePatterns: ['dist/**/*', 'tests/**/*'],
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/semi': 'off',

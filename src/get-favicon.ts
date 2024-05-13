@@ -10,7 +10,8 @@ export enum EStrategies {
 }
 
 interface IOptions {
-  strategies: EStrategies[]
+  strategies?: EStrategies[]
+  output?: 'buffer' | 'url'
 }
 
 interface IStrategy {
@@ -24,7 +25,8 @@ export async function getFavicon(
 ): Promise<Buffer | null> {
   // This will fetch the favicon using three strategies:
   // Using the /favicon.ico path, the DuckDuckGo API, and Google API
-  let icon: Buffer | null = null
+  let icon
+  const output = options?.output || 'buffer'
 
   // Define the used strategies
   let strategies: IStrategy[] = []
@@ -45,7 +47,7 @@ export async function getFavicon(
 
   // Handle the strategies options, meaning users only
   // select some of the available strategies
-  if (options?.strategies.length > 0) {
+  if (options?.strategies?.length > 0) {
     debugInstance('Selected strategies:', options.strategies.join(','))
 
     options.strategies.forEach(strategy => {
@@ -77,8 +79,13 @@ export async function getFavicon(
         return Buffer.from(ab)
       })
 
-      if (result) {
+      if (output === 'buffer') {
         icon = result
+        break
+      }
+
+      if (output === 'url') {
+        icon = strategy.url
         break
       }
 

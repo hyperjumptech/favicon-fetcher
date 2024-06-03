@@ -1,8 +1,12 @@
+import fetchMock from 'jest-fetch-mock'
 import { getFavicon } from '../src'
 import { type EStrategies } from '../src/get-favicon'
 
+fetchMock.enableMocks()
+
 beforeEach(() => {
   jest.setTimeout(10000)
+  fetchMock.resetMocks()
 })
 
 describe('Get favicon function', () => {
@@ -134,5 +138,17 @@ describe('Get favicon function', () => {
     } catch (error) {
       expect(error.message).toBe('The hostname provided is not a valid URL')
     }
+  })
+
+  it('should handle fetch errors correctly with buffer output', async () => {
+    fetchMock.mockReject(new Error('Fetch error'))
+
+    const result = await getFavicon('https://github.com', {
+      strategies: ['http' as EStrategies],
+      output: 'buffer',
+    })
+
+    // Check that result is null because of fetch error
+    expect(result).toBeNull()
   })
 })

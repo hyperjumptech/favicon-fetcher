@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
-import { parse } from 'node-html-parser'
 import d from 'debug'
+import { handleHttpStrategy, handleOtherStrategies } from './handlers'
 
 // Initialize the debug instance
 const debug = d('favicon')
@@ -10,7 +10,7 @@ export enum EStrategies {
   default = 'default',
   duckduckgo = 'duckduckgo',
   google = 'google',
-  http = 'http',
+  http = 'http'
 }
 
 // Interface for the options parameter
@@ -25,19 +25,29 @@ interface IStrategy {
   url: string
 }
 
-// Function to fetch the favicon using different strategies
+/**
+ * Fetches the favicon for a given hostname using various strategies.
+ *
+ * This function tries different strategies to fetch the favicon of a website.
+ * It supports both returning the favicon as a URL string or a buffer.
+ *
+ * @param {string} hostname - The hostname of the website to fetch the favicon from.
+ * @param {IOptions} [options] - Optional settings for the fetch operation.
+ * @param {EStrategies[]} [options.strategies] - Array of strategies to use for fetching the favicon.
+ * @param {'buffer' | 'url'} [options.output] - Desired output format, either 'buffer' or 'url'.
+ * @returns {Promise<Buffer | string | null>} - A promise that resolves to the favicon as a buffer, a URL string, or null if not found.
+ * @throws {Error} - Throws an error if the provided hostname is not a valid URL.
+ */
 export async function getFavicon(
   hostname: string,
-  options?: IOptions,
+  options?: IOptions
 ): Promise<Buffer | string | null> {
-  // Initialize the icon variable to null
   let icon: Buffer | string | null = null
-  // Set the output format (default is 'url')
   const output = options?.output || 'url'
 
-  // Check whether the URL is valid
   let url: string
   try {
+    // Validate the provided hostname
     const isValidURL = new URL(hostname).href
     if (isValidURL) {
       url = hostname
@@ -46,138 +56,42 @@ export async function getFavicon(
     throw new Error('The hostname provided is not a valid URL')
   }
 
-  // Define the strategies to be used
-  let strategies: IStrategy[] = []
-  // List of available strategies
+  // Define available strategies for fetching the favicon
   const availableStrategies: IStrategy[] = [
-    {
-      name: 'default',
-      url: `${url}/favicon.ico`,
-    },
-    {
-      name: 'http',
-      url,
-    },
-    {
-      name: 'duckduckgo',
-      url: `https://icons.duckduckgo.com/ip3/${url}.ico`,
-    },
+    { name: 'default', url: `${url}/favicon.ico` },
+    { name: 'http', url },
+    { name: 'duckduckgo', url: `https://icons.duckduckgo.com/ip3/${url}.ico` },
     {
       name: 'google',
-      url: `https://s2.googleusercontent.com/s2/favicons?domain=${url}`,
-    },
+      url: `https://s2.googleusercontent.com/s2/favicons?domain=${url}`
+    }
   ]
 
-  // Handle the strategies options
-  if (options?.strategies?.length > 0) {
-    debug('Using selected strategies:', options.strategies.join(','))
+  // Filter strategies based on options provided
+  const strategies = options?.strategies?.length
+    ? availableStrategies.filter(s =>
+        options.strategies.includes(s.name as EStrategies)
+      )
+    : availableStrategies
 
-    options.strategies.forEach(strategy => {
-      if (!(strategy in EStrategies)) {
-        // If the strategy is not available, skip it
-        debug(`${strategy} strategy is not supported. Skipping`)
-      } else {
-        // If the strategy is available, use it
-        const foundStrategy = availableStrategies.find(
-          availableStrategy => availableStrategy.name === strategy,
-        )
-        strategies.push(foundStrategy)
-      }
-    })
-  } else {
-    debug('Using all strategies: default, http, duckduckgo, and google')
-
-    // If no specific strategies are selected, use all available strategies
-    strategies = availableStrategies
-  }
-
-  // Loop through the strategy URLs
-  for await (const strategy of strategies) {
+  // Iterate through the strategies and attempt to fetch the favicon
+  for (const strategy of strategies) {
     try {
       debug(`Fetching using ${strategy.name} strategy`)
 
-      // Fetch the icon from the strategy URL
       const response = await fetch(strategy.url)
-
-      switch (strategy.name) {
-        case 'http':
-          {
-            // Handle http strategy
-            debug('Fetching HTML...')
-            const html = await response.text()
-
-            debug('Parsing HTML...')
-            const root = parse(html)
-
-            debug(
-              'Getting the favicon URL from the <link rel="icon"> element...',
-            )
-            const head = root.querySelector('head')
-            const element = head.querySelector('link[rel="icon"]')
-            const iconPath = element.getAttribute('href')
-
-            debug('Check if the icon path is an absolute URL...')
-            let iconURL: string
-            try {
-              // Check if iconPath is an absolute URL
-              iconURL = new URL(iconPath, strategy.url).href
-            } catch (_) {
-              // Handle invalid URL cases
-              iconURL = `${strategy.url}${iconPath.replace(strategy.url, '')}`
-            }
-
-            debug(`Returning the favicon as ${output}...`)
-            if (output === 'buffer') {
-              // Get the image to buffer
-              const iconResponse = await fetch(iconURL)
-              const arrayBuffer = await iconResponse.arrayBuffer()
-              icon = Buffer.from(arrayBuffer)
-              break
-            }
-
-            if (output === 'url') {
-              // Set the icon URL
-              icon = iconURL
-              break
-            }
-          }
-          break
-
-        default: {
-          // Handle other strategies
-          debug(`Returning the favicon as ${output}...`)
-          const result = await response.arrayBuffer().then(ab => {
-            return Buffer.from(ab)
-          })
-
-          if (output === 'buffer') {
-            icon = result
-            break
-          }
-
-          if (output === 'url') {
-            icon = strategy.url
-            break
-          }
-        }
+      if (strategy.name === 'http') {
+        icon = await handleHttpStrategy(response, strategy.url, output)
+      } else {
+        icon = await handleOtherStrategies(response, strategy.url, output)
       }
 
-      // If icon is found, break the loop
-      if (icon) {
-        break
-      }
-    } catch (_) {
-      // If an error occurs, continue with the next strategy
+      if (icon) break
+    } catch (e: unknown) {
+      debug(`Error using ${strategy.name} strategy: ${(e as Error).message}`)
       continue
     }
   }
 
-  // After the loop, check if icon has been found
-  if (icon) {
-    // If an icon is found, return it
-    return icon
-  } else {
-    // If no icon is found, return null
-    return null
-  }
+  return icon
 }

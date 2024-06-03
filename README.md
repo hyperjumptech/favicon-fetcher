@@ -6,32 +6,34 @@
 
 1. Install the dependencies
 
-```
+```bash
 npm install @hyperjumptech/favicon-fetcher
 ```
 
 2. Use it in your code
 
 ```js
-const { getFavicon } = require('@hyperjumptech/favicon-fetcher') // CommonJS
-import { getFavicon } from '@hyperjumptech/favicon-fetcher' // ES6
+const { getFavicon, EStrategies } = require('@hyperjumptech/favicon-fetcher') // CommonJS
+import { getFavicon, EStrategies } from '@hyperjumptech/favicon-fetcher' // ES6
 
 const result1 = await getFavicon('https://www.google.com') // using all strategies
-console.log(result1) // returns a binary
+console.log(result1) // returns a binary or a URL
 
 const options = {
-  strategies: ['duckduckgo', 'default'], // use the DuckDuckGo API and default method
+  strategies: [EStrategies.duckduckgo, EStrategies.default], // use the DuckDuckGo API and default method
+  output: 'url', // can be 'url' or 'buffer'
 }
 
 const result2 = await getFavicon('https://www.google.com', options) // use some strategies
-console.log(result2) // returns a binary from either DuckDuckGo API or default method
+console.log(result2) // returns a binary or URL from either DuckDuckGo API or default method
 ```
 
 ## Options
 
-| Options    | Type       | Description                                                                                                                                                                   | Default                               |
-| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| strategies | `string[]` | Define the strategies that will be used to fetch the favicon. Each strategies will be run sequentially. Currently available strategies are: `default`, `duckduckgo`, `google` | `['default', 'duckduckgo', 'google']` |
+| Options    | Type       | Description                                                                                                                                                                         | Default                                       |
+| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| strategies | `string[]` | Define the strategies that will be used to fetch the favicon. Each strategy will be run sequentially. Currently available strategies are: `default`, `http`, `duckduckgo`, `google` | `['default', 'http', 'duckduckgo', 'google']` |
+| output     | `string`   | Define the output format of the fetched favicon. Can be either `url` or `buffer`.                                                                                                   | `'url'`                                       |
 
 ## Contributing
 

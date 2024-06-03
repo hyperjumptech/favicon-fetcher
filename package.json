@@ -47,6 +47,7 @@
   "dependencies": {
     "@types/node": "^20.2.3",
     "debug": "^4.3.4",
-    "node-fetch": "^2.6.11"
+    "node-fetch": "^2.6.11",
+    "node-html-parser": "^6.1.13"
   }
 }

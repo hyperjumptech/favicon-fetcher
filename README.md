@@ -1,6 +1,6 @@
 # Favicon Fetcher
 
-`favicon-fetcher` is a utility to fetch a website's favicon by using multiple strategies (the favicon.ico method, the DuckDuckGo API method, and the Google API method).
+`favicon-fetcher` is a utility to fetch a website's favicon by using multiple strategies. By default, it will fetch the `href` attribute of the first `<link rel="icon">` element in the target's HTML file.
 
 ## How to Use
 
@@ -21,7 +21,7 @@ console.log(result1) // returns a binary or a URL
 
 const options = {
   strategies: [EStrategies.duckduckgo, EStrategies.default], // use the DuckDuckGo API and default method
-  output: 'url', // can be 'url' or 'buffer'
+  output: 'url' // can be 'url' or 'buffer'
 }
 
 const result2 = await getFavicon('https://www.google.com', options) // use some strategies
@@ -30,10 +30,10 @@ console.log(result2) // returns a binary or URL from either DuckDuckGo API or de
 
 ## Options
 
-| Options    | Type       | Description                                                                                                                                                                         | Default                                       |
-| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| strategies | `string[]` | Define the strategies that will be used to fetch the favicon. Each strategy will be run sequentially. Currently available strategies are: `default`, `http`, `duckduckgo`, `google` | `['default', 'http', 'duckduckgo', 'google']` |
-| output     | `string`   | Define the output format of the fetched favicon. Can be either `url` or `buffer`.                                                                                                   | `'url'`                                       |
+| Options    | Type       | Description                                                                                                                                                                                                                           | Default                                       |
+| ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| strategies | `string[]` | Define the strategies that will be used to fetch the favicon. Each strategy will be run sequentially. Currently available strategies are: `http`, `duckduckgo`, `google`, and `default`. Strategies defined will be run sequentially. | `['http', 'duckduckgo', 'google', 'default']` |
+| output     | `string`   | Define the output format of the fetched favicon. Can be either `url` or `buffer`. URL will return the favicon URL, buffer will return the image of the favicon                                                                        | `'url'`                                       |
 
 ## Contributing
 

@@ -25,14 +25,10 @@ export async function handleHttpStrategy(
     ?.getAttribute('href')
   if (!iconPath) return null
 
-  let iconURL: string
-  try {
-    const isAbsoluteURL = new URL(iconPath)
-    if (isAbsoluteURL) {
-      iconURL = isAbsoluteURL.href
-    }
-  } catch (e) {
-    iconURL = `${baseUrl}${iconPath}`
+  let iconURL: string = `${baseUrl}${iconPath.replace(baseUrl, '')}`
+  const isAbsoluteURL = new URL(iconPath, baseUrl)
+  if (isAbsoluteURL) {
+    iconURL = new URL(iconPath, baseUrl).href
   }
 
   if (output === 'buffer') {

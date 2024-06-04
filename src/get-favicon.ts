@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
-import d from 'debug'
 import { handleHttpStrategy, handleOtherStrategies } from './handlers'
+import d from 'debug'
 
 // Initialize the debug instance
 const debug = d('favicon')
@@ -58,13 +58,13 @@ export async function getFavicon(
 
   // Define available strategies for fetching the favicon
   const availableStrategies: IStrategy[] = [
-    { name: 'default', url: `${url}/favicon.ico` },
     { name: 'http', url },
     { name: 'duckduckgo', url: `https://icons.duckduckgo.com/ip3/${url}.ico` },
     {
       name: 'google',
       url: `https://s2.googleusercontent.com/s2/favicons?domain=${url}`
-    }
+    },
+    { name: 'default', url: `${url}/favicon.ico` }
   ]
 
   // Filter strategies based on options provided

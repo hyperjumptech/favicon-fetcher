@@ -14,12 +14,12 @@ describe('Get favicon function', () => {
     const result = await getFavicon('https://github.com')
 
     expect(result).not.toBeNull()
-    expect(result).toBe('https://github.com/favicon.ico')
+    expect(result).toBe('https://github.githubassets.com/favicons/favicon.svg')
   })
 
   it('should get the favicon correctly without options with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).not.toBeNull()
@@ -27,7 +27,7 @@ describe('Get favicon function', () => {
 
   it('should get the favicon correctly using the default strategy', async () => {
     const result = await getFavicon('https://github.com', {
-      strategies: ['default' as EStrategies],
+      strategies: ['default' as EStrategies]
     })
 
     expect(result).not.toBeNull()
@@ -37,7 +37,7 @@ describe('Get favicon function', () => {
   it('should get the favicon correctly using the default strategy with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
       strategies: ['default' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).not.toBeNull()
@@ -45,7 +45,7 @@ describe('Get favicon function', () => {
 
   it('should get the favicon correctly using the http strategy', async () => {
     const result = await getFavicon('https://github.com', {
-      strategies: ['http' as EStrategies],
+      strategies: ['http' as EStrategies]
     })
 
     expect(result).not.toBeNull()
@@ -55,7 +55,7 @@ describe('Get favicon function', () => {
   it('should get the favicon correctly using the http strategy with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
       strategies: ['http' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).not.toBeNull()
@@ -63,19 +63,19 @@ describe('Get favicon function', () => {
 
   it('should get the favicon correctly using the duckduckgo strategy', async () => {
     const result = await getFavicon('https://github.com', {
-      strategies: ['duckduckgo' as EStrategies],
+      strategies: ['duckduckgo' as EStrategies]
     })
 
     expect(result).not.toBeNull()
     expect(result).toBe(
-      'https://icons.duckduckgo.com/ip3/https://github.com.ico',
+      'https://icons.duckduckgo.com/ip3/https://github.com.ico'
     )
   })
 
   it('should get the favicon correctly using the duckduckgo strategy with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
       strategies: ['duckduckgo' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).not.toBeNull()
@@ -83,19 +83,19 @@ describe('Get favicon function', () => {
 
   it('should get the favicon correctly using the google strategy', async () => {
     const result = await getFavicon('https://github.com', {
-      strategies: ['google' as EStrategies],
+      strategies: ['google' as EStrategies]
     })
 
     expect(result).not.toBeNull()
     expect(result).toBe(
-      'https://s2.googleusercontent.com/s2/favicons?domain=https://github.com',
+      'https://s2.googleusercontent.com/s2/favicons?domain=https://github.com'
     )
   })
 
   it('should get the favicon correctly using the google strategy with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
       strategies: ['google' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).not.toBeNull()
@@ -103,7 +103,7 @@ describe('Get favicon function', () => {
 
   it('should not get the favicon correctly using unsupported strategy', async () => {
     const result = await getFavicon('https://github.com', {
-      strategies: ['bing' as EStrategies],
+      strategies: ['bing' as EStrategies]
     })
 
     expect(result).toBeNull()
@@ -112,7 +112,7 @@ describe('Get favicon function', () => {
   it('should not get the favicon correctly using unsupported strategy with buffer output', async () => {
     const result = await getFavicon('https://github.com', {
       strategies: ['bing' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     expect(result).toBeNull()
@@ -131,7 +131,7 @@ describe('Get favicon function', () => {
   it('should not get the favicon correctly because of bad URL with buffer output', async () => {
     try {
       await getFavicon('nicelydone', {
-        output: 'buffer',
+        output: 'buffer'
       })
       // If the function doesn't throw an error, fail the test
       expect(true).toBe(false)
@@ -145,7 +145,7 @@ describe('Get favicon function', () => {
 
     const result = await getFavicon('https://github.com', {
       strategies: ['http' as EStrategies],
-      output: 'buffer',
+      output: 'buffer'
     })
 
     // Check that result is null because of fetch error

@@ -15,7 +15,7 @@ describe('handleHttpStrategy', () => {
     const result = await handleHttpStrategy(
       response,
       'http://example.com',
-      'url',
+      'url'
     )
     expect(result).toBeNull()
   })
@@ -25,31 +25,31 @@ describe('handleHttpStrategy', () => {
     const result = await handleHttpStrategy(
       response,
       'http://example.com',
-      'url',
+      'url'
     )
     expect(result).toBeNull()
   })
 
   it('should return icon URL for relative path', async () => {
     const response = new Response(
-      '<html><head><link rel="icon" href="/favicon.ico"/></head><body></body></html>',
+      '<html><head><link rel="icon" href="/favicon.ico"/></head><body></body></html>'
     )
     const result = await handleHttpStrategy(
       response,
       'http://example.com',
-      'url',
+      'url'
     )
     expect(result).toBe('http://example.com/favicon.ico')
   })
 
   it('should return icon URL for absolute path', async () => {
     const response = new Response(
-      '<html><head><link rel="icon" href="http://example.com/favicon.ico"/></head><body></body></html>',
+      '<html><head><link rel="icon" href="http://example.com/favicon.ico"/></head><body></body></html>'
     )
     const result = await handleHttpStrategy(
       response,
       'http://example.com',
-      'url',
+      'url'
     )
     expect(result).toBe('http://example.com/favicon.ico')
   })
@@ -62,7 +62,7 @@ describe('handleOtherStrategies', () => {
     const result = await handleOtherStrategies(
       response,
       'http://example.com',
-      'buffer',
+      'buffer'
     )
 
     expect(result).toEqual(Buffer.from(arrayBuffer))
@@ -73,7 +73,7 @@ describe('handleOtherStrategies', () => {
     const result = await handleOtherStrategies(
       response,
       'http://example.com',
-      'url',
+      'url'
     )
 
     expect(result).toBe('http://example.com')

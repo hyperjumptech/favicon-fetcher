@@ -10,8 +10,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write src/*",
     "format:check": "prettier --check src/*",
-    "test": "jest --runInBand",
-    "test:coverage": "jest --runInBand --coverage",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepare": "husky install"
   },
   "repository": {
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@types/node-fetch": "^2.6.4",
+    "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "eslint": "^8.41.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
@@ -51,6 +52,7 @@
     "jest-fetch-mock": "^3.0.3",
     "minimist": "^1.2.8",
     "node-fetch": "^2.7.0",
-    "node-html-parser": "^6.1.13"
+    "node-html-parser": "^6.1.13",
+    "sinon": "^18.0.0"
   }
 }
